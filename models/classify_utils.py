@@ -22,6 +22,7 @@ if __name__ == "__main__":
 
 	nlp = spacy.load("en")
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+	print(device)
 	with open("vocab.pickle", "rb") as vocabf:
 		vocab = pickle.load(vocabf)
 
@@ -37,4 +38,5 @@ if __name__ == "__main__":
 
 	model.load_state_dict(torch.load("Bidirectional.pth"))
 
+	#print(model.state_dict())
 	print(f"{input} -> {classify(input, model, device)}")
