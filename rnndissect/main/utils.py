@@ -8,12 +8,12 @@ def sentence_to_tensor(sentence, vocab):
 		sentence (string) -> sentence to transform.
 		vocab (dict) -> dictionary that maps words to indices.
 	"""
-    nlp = spacy.load("en")
-    tokenized = [tok.text for tok in nlp.tokenizer(sentence)]
-    indexed = [vocab[t] for t in tokenized]
+	nlp = spacy.load("en")
+	tokenized = [tok.text for tok in nlp.tokenizer(sentence)]
+	indexed = [vocab[t] for t in tokenized]
 	
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    tensor = torch.LongTensor(indexed).to(device)
-    tensor = tensor.unsqueeze(1)
-    return tensor
+	tensor = torch.LongTensor(indexed).to(device)
+	tensor = tensor.unsqueeze(1)
+	return tensor

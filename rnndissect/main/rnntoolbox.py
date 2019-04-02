@@ -1,5 +1,6 @@
 import torch
 from models import BidirectionalLSTM
+from utils import sentence_to_tensor
 import pickle
 import spacy
 import sys
@@ -13,17 +14,36 @@ class RNNToolbox:
 	Class that encapsulates rnn utilities.
 	"""
 
-	def __init__(self, model, n_layers,  vocab_path):
+	def __init__(self, model_path, vocab_path):
 		"""
 		Args:
 			model (nn.Module) -> an instance of one of the model classes 
 								 defined in models.py
 			vocab_path (string) -> path to the serialized vocabulary file.
 		"""
-		self.model = model
-		self.n_layers = n_layers
-		with open(vocab.path, "rb") as vocabf:
-			self.vocab = pickle.load(vocabf)	
+		self.device = torch.device('cuda' if torch.cuda.is_available() 
+										  else 'cpu')
+
+		#load vocab first to get the number of inputs
+		with open(vocab_path, "rb") as vocabf:
+			self.vocab = pickle.load(vocabf)
+
+		#TODO READ PARAMETERS FROM A FILE
+		INPUT_DIM = len(self.vocab)
+		EMBEDDING_DIM = 100
+		self.hidden_dim = 256
+		self.output_dim = 1	
+		self.n_layers = 2
+		BIDIRECTIONAL = True
+		DROPOUT = 0.5
+
+		self.model = BidirectionalLSTM(INPUT_DIM, EMBEDDING_DIM, self.hidden_dim, 
+								  self.output_dim, self.n_layers, BIDIRECTIONAL, 
+								  DROPOUT).to(self.device)
+
+		self.model.load_state_dict(torch.load(model_path))
+
+
 				
 	def classify(self, sentence):
 		"""
@@ -32,28 +52,25 @@ class RNNToolbox:
 			sentence (string) -> the sentence to classify.
 		"""
 		tensor = sentence_to_tensor(sentence, self.vocab)	
-	    prediction = torch.sigmoid(model(tensor))
-	    return prediction.item()
+		prediction = torch.sigmoid(self.model(tensor))
+		return prediction.item()
 
-	def extract_params(n_layers, pytorch_dict):
+	def extract_params(self):
 		"""
 		Given the model.state_dict() from an lstm from pytorch,
 		unfold the pytorch dict's matrices into a new dict that facilitates
 		accesses.
 
-		Args:
-			n_layers (int) -> denotes the number of layers of the model.
-			pytorch_dict (dict) -> obtained from model.state_dict.
 		"""
 		result = {}
 		gate_ids = set(zip(range(4), ["i", "f", "g", "o"]))
 		tensor_ids = ["i", "h"]
 		params = ["weight", "bias"]
-		
+		pytorch_dict = self.model.state_dict()	
 		for rev in range(2):
 			revstr = ("_reverse" * rev)
 			for param in params:
-				for l in range(n_layers):
+				for l in range(self.n_layers):
 					for tensor_id in tensor_ids:
 						tensor = f"rnn.{param}_{tensor_id}h_l{l}" + revstr
 						for idx, id in gate_ids:
@@ -126,17 +143,17 @@ class RNNToolbox:
 		
 		return fun(torch.add(input, hidden))
 
-	def forward_pass(self, embeddings, n_layers, params, hidden_dim):
+	def forward_pass(self, embeddings, params):
 		result = {} #saves values of states and gates
 		revstr = "_reverse"
 			
 		for l in range(n_layers):
 			#random initialization of both hidden and cell states
-			result[f"h0{l}"] = torch.zeros(hidden_dim, 1).to(device)
-			result[f"c0{l}"] = torch.zeros(hidden_dim, 1).to(device)
+			result[f"h0{l}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
+			result[f"c0{l}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
 			#reverse aswell
-			result[f"h0{l}{revstr}"] = torch.zeros(hidden_dim, 1).to(device)
-			result[f"c0{l}{revstr}"] = torch.zeros(hidden_dim, 1).to(device)
+			result[f"h0{l}{revstr}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
+			result[f"c0{l}{revstr}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
 			
 			for t in range(len(embeddings)):
 				#if layer > 1, then the input isn't the model input, but the hidden state from the previous
@@ -165,25 +182,15 @@ class RNNToolbox:
 			sentence (string) -> input sentence
 		"""
 		embeddings = model.dropout(model.embedding(input))
-		acts = self.forward_pass(embeddings, self.n_layers, extract_params(
-									self.n_layers, model.state_dict()), 256)
-		return acts 
+		acts = self.forward_pass(embeddings, self.n_layers, 
+								 extract_params(self.model.state_dict()))
+		json.dumps(json_path) 
 						
 if __name__ == "__main__":
 	input = sys.argv[1]
 
+	model_path = "assets/models/Bidirectional.pth"
+	vocab_path = "assets/data/vocab.pickle"
+	toolbox = RNNToolbox(model_path, vocab_path)
 
-	INPUT_DIM = len(vocab)
-	EMBEDDING_DIM = 100
-	HIDDEN_DIM = 256
-	OUTPUT_DIM = 1
-	N_LAYERS = 2
-	BIDIRECTIONAL = True
-	DROPOUT = 0.5
-	model = BidirectionalLSTM(INPUT_DIM, EMBEDDING_DIM, HIDDEN_DIM, OUTPUT_DIM, 
-		  				      N_LAYERS, BIDIRECTIONAL, DROPOUT).to(device)
-
-	model.load_state_dict(torch.load("Bidirectional.pth"))
-
-	#print(model.state_dict())
-	print(f"{input} -> {classify(input, model, device)}")
+	print(f"{input} -> {toolbox.classify(input)}")
