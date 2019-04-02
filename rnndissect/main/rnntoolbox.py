@@ -173,18 +173,18 @@ class RNNToolbox:
 											  params, l, t, rev=True))
 			return result
 
-	def activations_to_json(self, json_path, sentence):
+	def activations_to_json(self, sentence):
 		"""
 		Writes the activation values of the model corrresponding
 		to a specific input sentence into a .json file.
 		Args: 
-			json_path (string) -> path of the json file.	
 			sentence (string) -> input sentence
 		"""
+		json_path = "assets/data/"
 		embeddings = model.dropout(model.embedding(input))
 		acts = self.forward_pass(embeddings, self.n_layers, 
 								 extract_params(self.model.state_dict()))
-		json.dumps(json_path) 
+		json.dumps("_".join(list("acts", sentence, ".json"))) 
 						
 if __name__ == "__main__":
 	input = sys.argv[1]
