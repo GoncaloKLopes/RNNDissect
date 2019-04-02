@@ -75,7 +75,7 @@ class RNNToolbox:
 						tensor = f"rnn.{param}_{tensor_id}h_l{l}" + revstr
 						for idx, id in gate_ids:
 							result[f"{param}_{tensor_id}{id}{l}"+revstr] = \
-								pytorch_dict[tensor][(idx*HIDDEN_DIM):((idx+1)*HIDDEN_DIM)]
+								pytorch_dict[tensor][(idx*self.hidden_dim):((idx+1)*self.hidden_dim)]
 		return result
 
 	def infer_gates(self, xt, ht, ct, params, l, t, rev=False):
@@ -120,16 +120,16 @@ class RNNToolbox:
 		cttl = f"c{t+1}{l}" + (revstr * rev)
 		httl = f"h{t+1}{l}" + (revstr * rev)
 		
-		res[itl] = infer_gate(params[Wiil], xt, params[biil],
+		res[itl] = self.infer_gate(params[Wiil], xt, params[biil],
 						params[Whil], ht, params[bhil], torch.sigmoid)
 
-		res[ftl] = infer_gate(params[Wifl], xt, params[bifl],
+		res[ftl] = self.infer_gate(params[Wifl], xt, params[bifl],
 						params[Whfl], ht, params[bhfl], torch.sigmoid)
 
-		res[gtl] = infer_gate(params[Wigl], xt, params[bigl],
+		res[gtl] = self.infer_gate(params[Wigl], xt, params[bigl],
 						params[Whgl], ht, params[bhgl], tanh)       
 
-		res[otl] = infer_gate(params[Wiol], xt, params[biol],
+		res[otl] = self.infer_gate(params[Wiol], xt, params[biol],
 						params[Whol], ht, params[bhol], torch.sigmoid) 
 
 		res[cttl] = torch.add(torch.mul(res[ftl], ct), torch.mul(res[itl], res[gtl]))
@@ -137,7 +137,7 @@ class RNNToolbox:
 			
 		return res
 
-	def infer_gate(i_w, x, b_i, h_w, h, b_h, fun):
+	def infer_gate(self, i_w, x, b_i, h_w, h, b_h, fun):
 		input = torch.addmm(torch.unsqueeze(b_i, -1), i_w, x)
 		hidden = torch.addmm(torch.unsqueeze(b_h, -1), h_w, h)
 		
@@ -147,7 +147,7 @@ class RNNToolbox:
 		result = {} #saves values of states and gates
 		revstr = "_reverse"
 			
-		for l in range(n_layers):
+		for l in range(self.n_layers):
 			#random initialization of both hidden and cell states
 			result[f"h0{l}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
 			result[f"c0{l}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
@@ -167,9 +167,9 @@ class RNNToolbox:
 					input_rev = torch.cat((result[f"h{reverse_t+1}{l-1}"],
 		  								  result[f"h{t+1}{l-1}{revstr}"]))
 						
-				result.update(infer_gates(input, result[f"h{t}{l}"], 
+				result.update(self.infer_gates(input, result[f"h{t}{l}"], 
 											  result[f"c{t}{l}"], params, l, t))
-				result.update(infer_gates(input_rev, result[f"h{t}{l}{revstr}"], result[f"c{t}{l}{revstr}"], 
+				result.update(self.infer_gates(input_rev, result[f"h{t}{l}{revstr}"], result[f"c{t}{l}{revstr}"], 
 											  params, l, t, rev=True))
 			return result
 
@@ -181,10 +181,16 @@ class RNNToolbox:
 			sentence (string) -> input sentence
 		"""
 		json_path = "assets/data/"
-		embeddings = model.dropout(model.embedding(input))
-		acts = self.forward_pass(embeddings, self.n_layers, 
-								 extract_params(self.model.state_dict()))
-		json.dumps("_".join(list("acts", sentence, ".json"))) 
+		encoded = sentence_to_tensor(sentence, self.vocab)	
+		embeddings = self.model.dropout(self.model.embedding(encoded))
+		acts = self.forward_pass(embeddings, self.extract_params())
+		filename = "_".join([json_path, "acts", sentence.replace(" ", "_"), ".json"])
+		acts_lists = {}
+		for (key,value) in acts.items():
+ 			acts_lists[key] = value.tolist()
+		with open(filename, "w+") as actsf:
+			json.dump(acts_lists, actsf) 
+		print("Activations saved to", filename)
 						
 if __name__ == "__main__":
 	input = sys.argv[1]
@@ -192,5 +198,7 @@ if __name__ == "__main__":
 	model_path = "assets/models/Bidirectional.pth"
 	vocab_path = "assets/data/vocab.pickle"
 	toolbox = RNNToolbox(model_path, vocab_path)
-
+	
+	toolbox.activations_to_json(input)
+	
 	print(f"{input} -> {toolbox.classify(input)}")
