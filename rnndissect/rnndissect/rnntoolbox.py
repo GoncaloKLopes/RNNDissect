@@ -1,13 +1,17 @@
 import torch
-from models import BidirectionalLSTM
-from utils import sentence_to_tensor
-import pickle
-import spacy
-import sys
 import numpy as np
 import math
 import random
 import json
+import sys
+import pickle
+import spacy
+
+from nlp_utils import sentence_to_tensor
+
+
+
+
 
 class RNNToolbox:
 	"""
