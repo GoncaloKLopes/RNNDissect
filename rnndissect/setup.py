@@ -4,5 +4,5 @@ setup(name="rnndissect",
 	  description="rnndissect",
 	  author="Goncalo Lopes",
 	  author_email="goncalo.chincho.lopes@ist.utl.pt",
-      packages=["rnndissect"],
+      packages=["rnndissect", "rnndissect.utils", "rnndissect.activations", "rnndissect.activations"],
 	  zip_safe=False)

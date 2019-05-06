@@ -120,7 +120,6 @@ class Extractor:
     def forward_pass(self, embeddings, params):
         result = {} #saves values of states and gates
         revstr = "_reverse"
-
         for l in range(self.n_layers):
             #random initialization of both hidden and cell states
             result[f"h0{l}"] = torch.zeros(self.hidden_dim, 1).to(self.device)
@@ -145,7 +144,8 @@ class Extractor:
                                                 result[f"c{t}{l}"], params, l, t))
                 result.update(self.infer_gates(input_rev, result[f"h{t}{l}{revstr}"], result[f"c{t}{l}{revstr}"],
                                                 params, l, t, rev=True))
-            return result
+
+        return result
 
     def activations_to_json(self, sentence, vocab):
         """
