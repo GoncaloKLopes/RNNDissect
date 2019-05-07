@@ -1,6 +1,10 @@
 import spacy
 import torch
 
+def tokenize_sentence(sentence, vocab):
+	nlp = spacy.load("en")
+	return nlp.tokenizer(sentence)
+
 def sentence_to_tensor(sentence, vocab):
 	"""
 	Transforms a sentence into an array of indices according to vocabulary vocab.
@@ -8,8 +12,7 @@ def sentence_to_tensor(sentence, vocab):
 		sentence (string) -> sentence to transform.
 		vocab (dict) -> dictionary that maps words to indices.
 	"""
-	nlp = spacy.load("en")
-	tokenized = [tok.text for tok in nlp.tokenizer(sentence)]
+	tokenized = tokenize_sentence(sentence, vocab)
 	indexed = [vocab[t] for t in tokenized]
 	
 	tensor = torch.LongTensor(indexed)
