@@ -5,6 +5,7 @@ import sys
 sys.path.append("..")
 from utils.nlp_utils import sentence_to_tensor
 
+
 class Extractor:
     """
     Class calculates activation values for different RNN architectures.

@@ -14,5 +14,6 @@ def classify_sentence(model, sentence, vocab, device):
 
     model.eval()
     tensor = (sentence_to_tensor(sentence, vocab)).to(device)
-    prediction = torch.sigmoid(model(tensor))
-    return prediction.item()
+    with torch.no_grad():
+        prediction = torch.sigmoid(model(tensor))
+    return prediction.squeeze(0)
