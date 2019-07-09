@@ -1,5 +1,8 @@
 import spacy
 import torch
+import pickle
+
+from ..settings import *
 
 
 def tokenize_sentence(sentence):
@@ -7,7 +10,7 @@ def tokenize_sentence(sentence):
     return nlp.tokenizer(sentence)
 
 
-def sentence_to_tensor(sentence, vocab):
+def sentence_to_tensor(sentence):
     """
     Transforms a sentence into an array of indices according
     to vocabulary vocab.
@@ -16,6 +19,9 @@ def sentence_to_tensor(sentence, vocab):
         sentence (string) -> sentence to transform.
         vocab (dict) -> dictionary that maps words to indices.
     """
+
+    with open(VOCAB_PATH, "rb") as vocabf:
+        vocab = pickle.load(vocabf)
     tokenized = tokenize_sentence(sentence.lower())
 
     specials = {"'s": "is"}

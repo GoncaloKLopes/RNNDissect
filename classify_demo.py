@@ -19,14 +19,11 @@ if __name__ == "__main__":
     state_dict = torch.load(os.path.join(MODEL_DIR, "lstm_2layers_bidir_adam.pt"))
     config = LSTM_CONFIG3
 
-    with open(VOCAB_PATH, "rb") as vocabf:
-        vocab = pickle.load(vocabf)
     model = BinarySARNN(config)
-
     model.load_state_dict(state_dict)
     model.to(DEVICE)
 
-    result = classify_sentence(model, sentence, vocab, DEVICE)
+    result = classify_sentence(model, sentence)
 
     print("Score ->", result)
 
