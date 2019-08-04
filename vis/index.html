@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RNNDissect Visualization</title>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<!-- End of Bootstrap-->
+<script src="scripts/script.js"></script>
+<script src="scripts/toolbar.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<body>
+    <div id="toolbar">
+       <div id="set_input" class="glyphtext">
+            <img src="assets/input_icon_white.png">
+            <span>Set Input</span>
+        </div>
+        <div id="set-model" class="glyphtext">
+            <img src="assets/model_icon_white.png">
+            <span>Set Model</span>
+        </div>
+        
+        <div id="settings" class="glyphtext">
+            <img src="assets/settings_icon_white.png">
+            <span>Settings</span>
+        </div>  
+    </div>
+    <div class="modal" id="set_input_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Set a new input</h5>
+                </div>
+                <div class="modal-body">
+                    <h7><strong>Choose your own input:</strong></h7>
+                    </br>
+                    <input id="set-input-text" type="text" name="input text">
+                    </br>
+                    <h7 class="or"><strong>Or...</strong></h7>
+                    </br>
+                    <h7><strong>Choose from the following list:</strong></h7>
+                    </br>
+                    <ul id="available-inputs"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button id="set-input-save" class="button confirm inactive" type="button">Save</button>
+                    <button id="set-input-cancel" class="button cancel" type="button">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="set-model-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Set a new model</h5>
+                </div>
+                <div class="modal-body">
+                    <h7><strong>Choose from the following list:</strong></h7>
+                    </br>
+                    <ul id="available-models">
+                        <li>simple rnn</li>
+                        <li>simple rnn (2 layers)</li>
+                        <li>simple rnn (2 layers, bidirectional)</li>
+                        <li>lstm</li>
+                        <li>lstm (2 layers)</li>
+                        <li>lstm (2 layers, bidirectional)</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button id="set-model-save" class="button confirm inactive" type="button">Save</button>
+                    <button id="set-model-cancel" class="button cancel" type="button">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="DE"></div>
+        <div id="FV"></div>
+        <div id="A"></div>
+    </div>
+    
+
+    </div>
+</body>
+</html>
