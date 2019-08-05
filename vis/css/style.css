@@ -91,8 +91,7 @@ html, body {
 #available-inputs, #available-models {
     padding-left: 0px;
     max-height: 250px;
-    overflow: scroll;
-    overflow-x: hidden;
+    
 }
 #available-inputs li, #available-models li {
     list-style-type: none;
@@ -101,6 +100,11 @@ html, body {
     border-bottom-width: 0px;
     padding: 2px;
     background-color: rgb(243, 243, 235);
+}
+
+.overflow-list {
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 #available-inputs li:hover, #available-models li:hover {
@@ -116,3 +120,8 @@ html, body {
     background-color: rgb(250, 250, 151);
     font-weight: bold;
 }
+
+.radio-form {
+    display: inline-block;
+}
+

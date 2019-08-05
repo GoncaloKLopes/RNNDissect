@@ -6,7 +6,7 @@ var available_model_selected = null
 
 $(document).ready(function() {
     //SET INPUT MODAL
-    $("#set_input").children("span").click(function() {
+    $("#set-input").children("span").click(function() {
         if (!input_flag){
             input_flag = true
             $.getJSON(REVIEWS_FILE, function(json) {
@@ -15,7 +15,8 @@ $(document).ready(function() {
                 })
             })
         }
-        $("#set_input_modal").modal({
+        $("#set-input-modal").modal({
+            backdrop: "static",
             keyboard: false
         })
     })
@@ -46,6 +47,7 @@ $(document).ready(function() {
 
     $("#set-input-save").on("click", function() {
         //TODO
+        $("#set-input-modal").modal("hide")
     })
 
     $("#set-input-cancel").on("click", function() {
@@ -54,12 +56,14 @@ $(document).ready(function() {
         $(available_input_selected).removeClass("available-input-selected")
         available_input_selected = null
         $("#set-input-save").addClass("inactive")
-        $("#set_input_modal").modal("hide")
+        //TODO
+        $("#set-input-modal").modal("hide")
     })
 
     //SET MODEL MODAL
     $("#set-model").children("span").click(function() {
         $("#set-model-modal").modal({
+            backdrop: "static",
             keyboard: false
         })
     })
@@ -81,15 +85,34 @@ $(document).ready(function() {
 
     $("#set-model-save").on("click", function() {
         //TODO
+        $("#set-model-modal").modal("hide")
     })
 
     $("#set-model-cancel").on("click", function() {
         $(available_model_selected).removeClass("available-model-selected")
         available_model_selected = null
         $("#set-model-save").addClass("inactive")
+        //TODO
         $("#set-model-modal").modal("hide")
     })
 
+    //OTHER SETTINGS
+    $("#other-settings").children("span").click(function() {
+        $("#settings-modal").modal({
+            backdrop: "static",
+            keyboard: false
+        })
+    })
+
+    $("#settings-save").on("click", function() {
+        //TODO
+        $("#settings-modal").modal("hide")
+    })
+
+    $("#settings-cancel").on("click", function() {
+        //TODO
+        $("#settings-modal").modal("hide")
+    })
 
 })
 

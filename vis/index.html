@@ -17,7 +17,7 @@
 </head>
 <body>
     <div id="toolbar">
-       <div id="set_input" class="glyphtext">
+        <div id="set-input" class="glyphtext">
             <img src="assets/input_icon_white.png">
             <span>Set Input</span>
         </div>
@@ -25,13 +25,12 @@
             <img src="assets/model_icon_white.png">
             <span>Set Model</span>
         </div>
-        
-        <div id="settings" class="glyphtext">
+        <div id="other-settings" class="glyphtext">
             <img src="assets/settings_icon_white.png">
-            <span>Settings</span>
+            <span>Other Settings</span>
         </div>  
     </div>
-    <div class="modal" id="set_input_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="set-input-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -46,7 +45,7 @@
                     </br>
                     <h7><strong>Choose from the following list:</strong></h7>
                     </br>
-                    <ul id="available-inputs"></ul>
+                    <ul id="available-inputs" class="overflow-list"></ul>
                 </div>
                 <div class="modal-footer">
                     <button id="set-input-save" class="button confirm inactive" type="button">Save</button>
@@ -76,6 +75,36 @@
                 <div class="modal-footer">
                     <button id="set-model-save" class="button confirm inactive" type="button">Save</button>
                     <button id="set-model-cancel" class="button cancel" type="button">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="settings-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Other settings</h5>
+                </div>
+                <div class="modal-body">
+                    <h7><strong>Activation and interpretation values should be shown...</strong></h7>
+                    </br>
+                    <input id="other-settings-mode-complete" type="radio" name="mode" value="complete" checked/>
+                    <label for="other-settings-mode-complete">Completely</label>
+                    <input id="other-settings-mode-incremental" type="radio" name="mode" value="incremental"/>
+                    <label for="other-settings-mode-incremental">Incrementally</label>
+                    </br>
+
+                    <h7><strong>Show activations...</strong></h7>
+                    </br>
+                    <input id="other-settings-acts-layer" type="radio" name="acts" value="layer" checked/>
+                    <label for="other-settings-acts-layer">By layer</label>
+                    <input id="other-settings-acts-node" type="radio" name="acts" value="node"/>
+                    <label for="other-settings-acts-node">By node</label>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="settings-save" class="button confirm" type="button">Save</button>
+                    <button id="settings-cancel" class="button cancel" type="button">Cancel</button>
                 </div>
             </div>
         </div>
