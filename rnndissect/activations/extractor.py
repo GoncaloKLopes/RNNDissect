@@ -222,8 +222,7 @@ class Extractor:
         encoded = (sentence_to_tensor(sentence)).to(DEVICE)
         embeddings = self.model.embed(encoded)
         acts = self.forward_pass(embeddings, self.extract_params())
-        filename = os.path.join(dir_path,
-                                ".".join(["_".join(["acts", fname]), "json"]))
+        filename = os.path.join(dir_path, fname)
         acts_lists = {}
         for (key, value) in acts.items():
             acts_lists[key] = value.tolist()

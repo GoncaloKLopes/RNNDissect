@@ -10,9 +10,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <!-- End of Bootstrap-->
-<script src="scripts/script.js"></script>
+<script src="scripts/overview.js"></script>
 <script src="scripts/toolbar.js"></script>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/overview.css">
+<link rel="stylesheet" type="text/css" href="css/toolbar.css">
 
 </head>
 <body>
@@ -64,16 +65,16 @@
                     <h7><strong>Choose from the following list:</strong></h7>
                     </br>
                     <ul id="available-models">
-                        <li>simple rnn</li>
-                        <li>simple rnn (2 layers)</li>
-                        <li>simple rnn (2 layers, bidirectional)</li>
-                        <li>lstm</li>
-                        <li>lstm (2 layers)</li>
-                        <li>lstm (2 layers, bidirectional)</li>
+                        <li id="simple_rnn">simple rnn</li>
+                        <li id="simple_rnn_2layers">simple rnn (2 layers)</li>
+                        <li id="simple_rnn_2layers_bidir">simple rnn (2 layers, bidirectional)</li>
+                        <li id="lstm">lstm</li>
+                        <li id="lstm_2layers">lstm (2 layers)</li>
+                        <li id="lstm_2layers_bidir">lstm (2 layers, bidirectional)</li>
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button id="set-model-save" class="button confirm inactive" type="button">Save</button>
+                    <button id="set-model-save" class="button confirm" type="button">Save</button>
                     <button id="set-model-cancel" class="button cancel" type="button">Cancel</button>
                 </div>
             </div>

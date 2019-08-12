@@ -4,7 +4,7 @@ from .nlp_utils import sentence_to_tensor
 from ..settings import *
 
 
-def classify_sentence(model, sentence):
+def classify(model, inpt):
     """Classifies a sentence using a defined model.
 
     Arguments:
@@ -18,7 +18,7 @@ def classify_sentence(model, sentence):
     with open(VOCAB_PATH, "rb") as vocabf:
         vocab = pickle.load(vocabf)
 
-    tensor = (sentence_to_tensor(sentence)).to(DEVICE)
+    tensor = (sentence_to_tensor(inpt)).to(DEVICE)
     with torch.no_grad():
         prediction = torch.sigmoid(model(tensor))
     return prediction.squeeze(0)

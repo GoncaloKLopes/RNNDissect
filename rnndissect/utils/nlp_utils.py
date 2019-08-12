@@ -33,6 +33,8 @@ def sentence_to_tensor(sentence):
     for t in tokenized:
         if str(t) in specials.keys():
             indexed.append(vocab[specials[str(t)]].index)
+        elif str(t) == "\n":
+            continue
         else:
             indexed.append(vocab[str(t)].index)
 
